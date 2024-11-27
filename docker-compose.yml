@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+  web:
+    image: toasterlint/php-apache-mysql
+    container_name: web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    stdin_open: true  # For interactive terminal (-i)
+    tty: true  # For allocating a pseudo-TTY (-t)
+    environment:
+      WP_DATABASE: wordpress
+      WP_DATABASE_USER: root
+      WP_DATABASE_PASSWORD: password
+      WP_DATABASE_HOST: $IP # recommended not to change if running MySQL locally
+      WP_DATABASE_PORT: 3306
+      MYSQL_TEST_DATABASE: wordpress_test
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      - PMA_HOST=$IP # recommended not to change if running MySQL locally
+      - PMA_PORT=3306
+    restart: unless-stopped
